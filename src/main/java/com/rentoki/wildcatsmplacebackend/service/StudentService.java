@@ -1,5 +1,9 @@
 package com.rentoki.wildcatsmplacebackend.service;
 
+import com.rentoki.wildcatsmplacebackend.exceptions.ErrorMessages;
+import com.rentoki.wildcatsmplacebackend.exceptions.InactiveAccountException;
+import com.rentoki.wildcatsmplacebackend.exceptions.InvalidCredentialsException;
+import com.rentoki.wildcatsmplacebackend.exceptions.StudentNotFoundException;
 import com.rentoki.wildcatsmplacebackend.model.*;
 import com.rentoki.wildcatsmplacebackend.repository.StudentRepository;
 import org.springframework.stereotype.Service;
@@ -27,7 +31,7 @@ public class StudentService {
             Student student = studentOptional.get();
 
             if (!student.isActive()) {
-                throw new RuntimeException("Account is deactivated");
+                throw new InactiveAccountException(ErrorMessages.INACTIVE_ACCOUNT.getMessage());
             }
 
             if (student.getPassword().equals(loginRequest.getPassword())) {
@@ -37,11 +41,11 @@ public class StudentService {
 
                 return response;
             } else {
-                throw new RuntimeException("Invalid password");
+                throw new InvalidCredentialsException(ErrorMessages.INVALID_CREDENTIALS.getMessage());
             }
         }
 
-        throw new RuntimeException("User not found");
+        throw new StudentNotFoundException(ErrorMessages.STUDENT_NOT_FOUND.getMessage());
     }
 
     public RegisterResponse registerStudent(RegisterRequest registerRequest) {
