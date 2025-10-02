@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -11,29 +13,52 @@ import lombok.NoArgsConstructor;
 public class Student {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Integer id;
+    @Column(name = "student_id")
+    private Integer studentId;
 
-    @Column(name = "username")
-    private String username;
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "student_id")
+    private User user;
 
-    @Column(name = "password")
-    private String password;
+    @Column(name = "is_verified")
+    private Boolean isVerified = false;
 
-    @Column(name = "email")
-    private String email;
+    @Column(name = "enrollment_status")
+    private String enrollmentStatus;
 
-    @Column(name = "fullname")
-    private String fullname;
+    @Column(name = "program")
+    private String program;
 
-    @Column(name = "is_active")
-    private boolean isActive = true;
+    @Column(name = "year_level")
+    private String yearLevel;
 
-    public Student(RegisterRequest request) {
-        this.username = request.getUsername();
-        this.password = request.getPassword();
-        this.email = request.getEmail();
-        this.fullname = request.getFullname();
+    @ManyToMany
+    @JoinTable(
+            name = "student_interest",
+            joinColumns = @JoinColumn(name = "student_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private List<Category> interests;
+
+    @OneToMany(mappedBy = "student")
+    private List<Resource> resources;
+
+    @OneToMany(mappedBy = "student")
+    private List<VerificationRequest> verificationRequests;
+
+    @OneToMany(mappedBy = "student")
+    private List<Report> reports;
+
+    public String getFullName() {
+        return user != null ? user.getFirstName() + " " + user.getLastName() : null;
+    }
+
+    public String getEmail() {
+        return user != null ? user.getEmail() : null;
+    }
+
+    public String getUsername() {
+        return user != null ? user.getUsername() : null;
     }
 }
