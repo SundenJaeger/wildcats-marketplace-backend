@@ -9,4 +9,6 @@ public interface ResourceRepository extends JpaRepository<Resource, Integer> {
     List<Resource> findByCategoryCategoryId(Integer categoryId);
     List<Resource> findByStatus(Resource.ResourceStatus status);
     List<Resource> findByTitleContainingIgnoreCase(String title);
+    List<Resource> findByCondition(Resource.ItemCondition condition);
+    List<Resource> findByPriceBetween(Double minPrice, Double maxPrice);
 }
