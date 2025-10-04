@@ -9,12 +9,20 @@ public class RegisterRequest {
     private String username;
     private String password;
     private String email;
-    private String fullname;
+    private String firstName;
+    private String lastName;
 
     public RegisterRequest(Student student) {
-        this.username = student.getUsername();
-        this.password = student.getPassword();
-        this.email = student.getEmail();
-        this.fullname = student.getFullname();
+        if (student != null && student.getUser() != null) {
+            this.username = student.getUser().getUsername();
+            this.password = student.getUser().getPassword();
+            this.email = student.getUser().getEmail();
+            this.firstName = student.getUser().getFirstName();
+            this.lastName = student.getUser().getLastName();
+        }
+    }
+
+    public String getFullName() {
+        return firstName + " " + lastName;
     }
 }

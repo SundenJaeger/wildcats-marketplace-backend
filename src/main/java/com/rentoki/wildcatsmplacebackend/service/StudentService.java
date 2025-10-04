@@ -39,8 +39,8 @@ public class StudentService {
         user.setUsername(registerRequest.getUsername());
         user.setPassword(registerRequest.getPassword());
         user.setEmail(registerRequest.getEmail());
-        user.setFirstName(extractFirstName(registerRequest.getFullname()));
-        user.setLastName(extractLastName(registerRequest.getFullname()));
+        user.setFirstName(extractFirstName(registerRequest.getFirstName()));
+        user.setLastName(extractLastName(registerRequest.getLastName()));
         user.setType("S");
 
         User savedUser = userService.createUser(user);
@@ -114,12 +114,7 @@ public class StudentService {
 
         Student savedStudent = createStudent(student, registerRequest);
 
-        RegisterResponse response = new RegisterResponse();
-        response.setUsername(savedStudent.getUser().getUsername());
-        response.setEmail(savedStudent.getUser().getEmail());
-        response.setFullname(savedStudent.getUser().getFirstName() + " " + savedStudent.getUser().getLastName());
-
-        return response;
+        return new RegisterResponse(savedStudent.getUser(), savedStudent);
     }
 
     public Student updateStudentVerification(Integer studentId, Boolean isVerified) {
