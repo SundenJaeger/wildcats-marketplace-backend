@@ -28,7 +28,7 @@ public class Resource {
     private BigDecimal price;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "condition", nullable = false)
+    @Column(name = "item_condition", nullable = false)
     private ItemCondition condition;
 
     @Enumerated(EnumType.STRING)
