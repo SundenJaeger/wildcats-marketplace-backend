@@ -48,4 +48,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleVerificationRequestNotFoundException(VerificationRequestNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(ex.getMessage()));
     }
+
+    @ExceptionHandler(ResourceImageNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleResourceImageNotFoundException(ResourceImageNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(ex.getMessage()));
+    }
 }

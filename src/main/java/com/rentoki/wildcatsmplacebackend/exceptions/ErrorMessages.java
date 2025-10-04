@@ -15,7 +15,8 @@ public enum ErrorMessages {
     VERIFICATION_REQUEST_NOT_FOUND("Verification request not found"),
     REPORT_NOT_FOUND("Report not found"),
     ADMIN_NOT_FOUND("Admin not found"),
-    STUDENT_NOT_VERIFIED("Student is not verified");
+    STUDENT_NOT_VERIFIED("Student is not verified"),
+    RESOURCE_IMAGE_NOT_FOUND("Resource image not found");
 
     private final String message;
 
