@@ -35,19 +35,22 @@ public class StudentService {
 
     @Transactional
     public Student createStudent(Student student, RegisterRequest registerRequest) {
+        // Create User first
         User user = new User();
         user.setUsername(registerRequest.getUsername());
         user.setPassword(registerRequest.getPassword());
         user.setEmail(registerRequest.getEmail());
-        user.setFirstName(extractFirstName(registerRequest.getFirstName()));
-        user.setLastName(extractLastName(registerRequest.getLastName()));
+        user.setFirstName(registerRequest.getFirstName());
+        user.setLastName(registerRequest.getLastName());
         user.setType("S");
 
         User savedUser = userService.createUser(user);
 
-        student.setStudentId(savedUser.getUserId());
         student.setUser(savedUser);
         student.setIsVerified(false);
+        student.setEnrollmentStatus("Active");
+        student.setProgram("Undecided");
+        student.setYearLevel("Freshman");
 
         return studentRepository.save(student);
     }
@@ -82,22 +85,27 @@ public class StudentService {
         if (userOptional.isPresent()) {
             User user = userOptional.get();
 
-            Optional<Student> studentOptional = studentRepository.findById(user.getUserId());
-            if (studentOptional.isEmpty()) {
-                throw new InvalidCredentialsException(ErrorMessages.INVALID_CREDENTIALS.getMessage());
-            }
-
-            Student student = studentOptional.get();
-
-            if (!student.getIsVerified()) {
-                throw new InactiveAccountException(ErrorMessages.INACTIVE_ACCOUNT.getMessage());
-            }
-
             if (user.getPassword().equals(loginRequest.getPassword())) {
-                LoginResponse response = new LoginResponse();
-                response.setUsername(user.getUsername());
-                response.setEmail(user.getEmail());
-                return response;
+                if ("S".equals(user.getType())) {
+                    Optional<Student> studentOptional = studentRepository.findById(user.getUserId());
+                    if (studentOptional.isEmpty()) {
+                        throw new InvalidCredentialsException(ErrorMessages.INVALID_CREDENTIALS.getMessage());
+                    }
+
+                    Student student = studentOptional.get();
+
+                    if (!student.getIsVerified()) {
+                        throw new InactiveAccountException(ErrorMessages.INACTIVE_ACCOUNT.getMessage());
+                    }
+
+                    return new LoginResponse(user, student);
+
+                } else if ("A".equals(user.getType())) {
+                    return new LoginResponse(user);
+                } else {
+                    throw new InvalidCredentialsException(ErrorMessages.INVALID_CREDENTIALS.getMessage());
+                }
+
             } else {
                 throw new InvalidCredentialsException(ErrorMessages.INVALID_CREDENTIALS.getMessage());
             }

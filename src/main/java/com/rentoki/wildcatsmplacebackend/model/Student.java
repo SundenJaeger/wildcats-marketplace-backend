@@ -1,5 +1,6 @@
 package com.rentoki.wildcatsmplacebackend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -33,6 +34,7 @@ public class Student {
     @Column(name = "year_level")
     private String yearLevel;
 
+    @JsonIgnore
     @ManyToMany
     @JoinTable(
             name = "student_interest",
@@ -41,24 +43,15 @@ public class Student {
     )
     private List<Category> interests;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "student")
     private List<Resource> resources;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "student")
     private List<VerificationRequest> verificationRequests;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "student")
     private List<Report> reports;
-
-    public String getFullName() {
-        return user != null ? user.getFirstName() + " " + user.getLastName() : null;
-    }
-
-    public String getEmail() {
-        return user != null ? user.getEmail() : null;
-    }
-
-    public String getUsername() {
-        return user != null ? user.getUsername() : null;
-    }
 }

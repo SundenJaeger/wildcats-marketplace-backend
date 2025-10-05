@@ -60,6 +60,5 @@ public class StudentController {
         return ResponseEntity.ok(students);
     }
 
-    // Request record for verification status
     public record VerificationStatusRequest(Boolean isVerified) {}
 }

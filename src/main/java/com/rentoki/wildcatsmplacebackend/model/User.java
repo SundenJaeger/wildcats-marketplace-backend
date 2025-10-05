@@ -1,5 +1,6 @@
 package com.rentoki.wildcatsmplacebackend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,11 +33,13 @@ public class User {
     private String password;
 
     @Column(name = "type", nullable = false)
-    private String type; // 'S' for Student, 'A' for Admin
+    private String type;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Student student;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Admin admin;
 }
