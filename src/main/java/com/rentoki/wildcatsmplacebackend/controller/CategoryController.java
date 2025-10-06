@@ -2,6 +2,7 @@ package com.rentoki.wildcatsmplacebackend.controller;
 
 import com.rentoki.wildcatsmplacebackend.model.Category;
 import com.rentoki.wildcatsmplacebackend.service.CategoryService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/categories")
+@Tag(name = "4. Categories", description = "Category management APIs")
 public class CategoryController {
     private final CategoryService categoryService;
 

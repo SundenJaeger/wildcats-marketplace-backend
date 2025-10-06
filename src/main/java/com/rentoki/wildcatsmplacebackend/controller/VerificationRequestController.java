@@ -2,6 +2,7 @@ package com.rentoki.wildcatsmplacebackend.controller;
 
 import com.rentoki.wildcatsmplacebackend.model.VerificationRequest;
 import com.rentoki.wildcatsmplacebackend.service.VerificationRequestService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/verification-requests")
+@Tag(name = "5. Verification", description = "Student verification request APIs")
 public class VerificationRequestController {
     private final VerificationRequestService verificationRequestService;
 

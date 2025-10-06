@@ -2,6 +2,7 @@ package com.rentoki.wildcatsmplacebackend.controller;
 
 import com.rentoki.wildcatsmplacebackend.model.Resource;
 import com.rentoki.wildcatsmplacebackend.service.ResourceService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/resources")
+@Tag(name = "3. Marketplace", description = "Resource marketplace APIs")
 public class ResourceController {
     private final ResourceService resourceService;
 

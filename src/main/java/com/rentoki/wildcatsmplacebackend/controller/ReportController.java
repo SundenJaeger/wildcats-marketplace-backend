@@ -2,6 +2,7 @@ package com.rentoki.wildcatsmplacebackend.controller;
 
 import com.rentoki.wildcatsmplacebackend.model.Report;
 import com.rentoki.wildcatsmplacebackend.service.ReportService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/reports")
+@Tag(name = "6. Reports", description = "Content reporting and moderation APIs")
 public class ReportController {
     private final ReportService reportService;
 

@@ -3,6 +3,7 @@ package com.rentoki.wildcatsmplacebackend.controller;
 import com.rentoki.wildcatsmplacebackend.model.Admin;
 import com.rentoki.wildcatsmplacebackend.model.User;
 import com.rentoki.wildcatsmplacebackend.service.AdminService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/admins")
+@Tag(name = "7. Administration", description = "Admin management APIs")
 public class AdminController {
     private final AdminService adminService;
 
