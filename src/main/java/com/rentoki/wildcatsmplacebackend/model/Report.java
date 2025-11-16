@@ -1,5 +1,6 @@
 package com.rentoki.wildcatsmplacebackend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,14 +17,17 @@ public class Report {
     @Column(name = "report_id")
     private Integer reportId;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "resource_id", nullable = false)
     private Resource resource;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "student_id", nullable = false)
     private Student student;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "admin_id")
     private Admin admin;
