@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.rentoki</groupId>
-    <artifactId>WildcatsMplaceBackend</artifactId>
+    <artifactId>algorhythym</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>WildcatsMplaceBackend</name>
-    <description>WildcatsMplaceBackend</description>
+    <name>wildcats-marketplace-backend</name>
+    <description>The backend for Wildcats Marketplace</description>
     <url/>
     <licenses>
         <license/>
