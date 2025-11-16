@@ -51,12 +51,6 @@ public class AdminController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/department/{department}")
-    public ResponseEntity<List<Admin>> getAdminsByDepartment(@PathVariable String department) {
-        List<Admin> admins = adminService.getAdminsByDepartment(department);
-        return ResponseEntity.ok(admins);
-    }
-
     // Request records
     public record AdminCreationRequest(Admin admin, User user) {}
 }

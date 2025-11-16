@@ -36,8 +36,8 @@ public class AdminService {
         user.setType("A");
         User savedUser = userService.createUser(user);
 
-        admin.setAdminId(savedUser.getUserId());
         admin.setUser(savedUser);
+        user.setAdmin(admin);
 
         return adminRepository.save(admin);
     }
@@ -46,7 +46,6 @@ public class AdminService {
         Admin admin = adminRepository.findById(id)
                 .orElseThrow(() -> new AdminNotFoundException(ErrorMessages.ADMIN_NOT_FOUND.getMessage()));
 
-        admin.setDepartment(adminDetails.getDepartment());
         admin.setRole(adminDetails.getRole());
 
         return adminRepository.save(admin);
@@ -56,9 +55,5 @@ public class AdminService {
         Admin admin = adminRepository.findById(id)
                 .orElseThrow(() -> new AdminNotFoundException(ErrorMessages.ADMIN_NOT_FOUND.getMessage()));
         adminRepository.delete(admin);
-    }
-
-    public List<Admin> getAdminsByDepartment(String department) {
-        return adminRepository.findByDepartment(department);
     }
 }

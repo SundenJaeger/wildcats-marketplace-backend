@@ -20,9 +20,6 @@ public class Admin {
     @JoinColumn(name = "admin_id")
     private User user;
 
-    @Column(name = "department")
-    private String department;
-
     @Column(name = "role")
     private String role;
 
