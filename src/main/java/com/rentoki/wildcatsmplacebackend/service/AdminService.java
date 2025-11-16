@@ -8,6 +8,7 @@ import com.rentoki.wildcatsmplacebackend.repository.AdminRepository;
 import com.rentoki.wildcatsmplacebackend.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -47,6 +48,15 @@ public class AdminService {
                 .orElseThrow(() -> new AdminNotFoundException(ErrorMessages.ADMIN_NOT_FOUND.getMessage()));
 
         admin.setRole(adminDetails.getRole());
+
+        if (adminDetails.getUser() != null) {
+            User user = admin.getUser();
+            user.setUsername(adminDetails.getUser().getUsername());
+            user.setFirstName(adminDetails.getUser().getFirstName());
+            user.setLastName(adminDetails.getUser().getLastName());
+            user.setPassword(adminDetails.getUser().getPassword());
+            user.setEmail(adminDetails.getUser().getEmail());
+        }
 
         return adminRepository.save(admin);
     }
