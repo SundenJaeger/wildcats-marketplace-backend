@@ -1,6 +1,8 @@
 package com.rentoki.wildcatsmplacebackend.controller;
 
+import com.rentoki.wildcatsmplacebackend.model.CreateReportRequest;
 import com.rentoki.wildcatsmplacebackend.model.Report;
+import com.rentoki.wildcatsmplacebackend.model.ReportResponse;
 import com.rentoki.wildcatsmplacebackend.service.ReportService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
@@ -50,8 +52,8 @@ public class ReportController {
     }
 
     @PostMapping
-    public ResponseEntity<Report> createReport(@RequestBody Report report) {
-        Report createdReport = reportService.createReport(report);
+    public ResponseEntity<ReportResponse> createReport(@RequestBody CreateReportRequest request) {
+        ReportResponse createdReport = reportService.createReport(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdReport);
     }
 

@@ -35,7 +35,6 @@ public class StudentService {
 
     @Transactional
     public Student createStudent(Student student, RegisterRequest registerRequest) {
-        // Create User first
         User user = new User();
         user.setUsername(registerRequest.getUsername());
         user.setPassword(registerRequest.getPassword());

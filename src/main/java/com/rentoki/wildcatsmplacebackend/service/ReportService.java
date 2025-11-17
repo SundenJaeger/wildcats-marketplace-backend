@@ -1,12 +1,11 @@
 package com.rentoki.wildcatsmplacebackend.service;
 
-import com.rentoki.wildcatsmplacebackend.exceptions.AdminNotFoundException;
-import com.rentoki.wildcatsmplacebackend.exceptions.ErrorMessages;
-import com.rentoki.wildcatsmplacebackend.exceptions.ReportNotFoundException;
-import com.rentoki.wildcatsmplacebackend.model.Admin;
-import com.rentoki.wildcatsmplacebackend.model.Report;
+import com.rentoki.wildcatsmplacebackend.exceptions.*;
+import com.rentoki.wildcatsmplacebackend.model.*;
 import com.rentoki.wildcatsmplacebackend.repository.AdminRepository;
 import com.rentoki.wildcatsmplacebackend.repository.ReportRepository;
+import com.rentoki.wildcatsmplacebackend.repository.ResourceRepository;
+import com.rentoki.wildcatsmplacebackend.repository.StudentRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -16,10 +15,14 @@ import java.util.List;
 public class ReportService {
     private final ReportRepository reportRepository;
     private final AdminRepository adminRepository;
+    private final StudentRepository studentRepository;
+    private final ResourceRepository resourceRepository;
 
-    public ReportService(ReportRepository reportRepository, AdminRepository adminRepository) {
+    public ReportService(ReportRepository reportRepository, AdminRepository adminRepository, StudentRepository studentRepository, ResourceRepository resourceRepository) {
         this.reportRepository = reportRepository;
         this.adminRepository = adminRepository;
+        this.studentRepository = studentRepository;
+        this.resourceRepository = resourceRepository;
     }
 
     public List<Report> getAllReports() {
@@ -43,10 +46,25 @@ public class ReportService {
                 .orElseThrow(() -> new ReportNotFoundException(ErrorMessages.REPORT_NOT_FOUND.getMessage()));
     }
 
-    public Report createReport(Report report) {
+    public ReportResponse createReport(CreateReportRequest createReportRequest) {
+        Student student = studentRepository.findById(createReportRequest.studentId())
+                .orElseThrow(() -> new StudentNotFoundException("Student not found with ID: " + createReportRequest.studentId()));
+
+        Resource resource = resourceRepository.findById(createReportRequest.resourceId())
+                .orElseThrow(() -> new ResourceNotFoundException("Resource not found with ID: " + createReportRequest.resourceId()));
+
+        Report report = new Report();
+        report.setReason(createReportRequest.reason());
+        report.setDescription(createReportRequest.description());
+        report.setStudent(student);
+        report.setResource(resource);
         report.setStatus(Report.ReportStatus.PENDING);
         report.setDateReported(LocalDateTime.now());
-        return reportRepository.save(report);
+
+        Report savedReport = reportRepository.save(report);
+
+        return new ReportResponse(savedReport.getReportId(), savedReport.getDescription(), savedReport.getStatus(), savedReport.getDateReported(), savedReport.getDateResolved()
+        );
     }
 
     public Report updateReportStatus(Integer id, Report.ReportStatus status) {
