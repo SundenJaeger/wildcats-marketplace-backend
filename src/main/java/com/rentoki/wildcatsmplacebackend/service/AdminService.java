@@ -25,11 +25,17 @@ public class AdminService {
     }
 
     public List<Admin> getAllAdmins() {
+        List<Admin> admins = adminRepository.findAll();
+
+        if (admins.isEmpty()) {
+            throw new AdminNotFoundException(ErrorMessages.ADMIN_NOT_FOUND.getMessage());
+        }
+
         return adminRepository.findAll();
     }
 
-    public Optional<Admin> getAdminById(Integer id) {
-        return adminRepository.findById(id);
+    public Admin getAdminById(Integer id) {
+        return adminRepository.findById(id).orElseThrow(() -> new AdminNotFoundException(ErrorMessages.ADMIN_NOT_FOUND.getMessage()));
     }
 
     @Transactional

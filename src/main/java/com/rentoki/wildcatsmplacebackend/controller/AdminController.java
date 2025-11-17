@@ -36,8 +36,7 @@ public class AdminController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Admin> getAdminById(@PathVariable Integer id) {
-        Admin admin = adminService.getAdminById(id)
-                .orElseThrow(() -> new RuntimeException("Admin not found"));
+        Admin admin = adminService.getAdminById(id);
         return ResponseEntity.ok(admin);
     }
 
