@@ -1,19 +1,25 @@
 package com.rentoki.wildcatsmplacebackend.service;
 
+import com.rentoki.wildcatsmplacebackend.exceptions.AdminNotFoundException;
 import com.rentoki.wildcatsmplacebackend.exceptions.ErrorMessages;
 import com.rentoki.wildcatsmplacebackend.exceptions.ReportNotFoundException;
+import com.rentoki.wildcatsmplacebackend.model.Admin;
 import com.rentoki.wildcatsmplacebackend.model.Report;
+import com.rentoki.wildcatsmplacebackend.repository.AdminRepository;
 import com.rentoki.wildcatsmplacebackend.repository.ReportRepository;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 public class ReportService {
     private final ReportRepository reportRepository;
+    private final AdminRepository adminRepository;
 
-    public ReportService(ReportRepository reportRepository) {
+    public ReportService(ReportRepository reportRepository, AdminRepository adminRepository) {
         this.reportRepository = reportRepository;
+        this.adminRepository = adminRepository;
     }
 
     public List<Report> getAllReports() {
@@ -59,10 +65,9 @@ public class ReportService {
         Report report = reportRepository.findById(reportId)
                 .orElseThrow(() -> new ReportNotFoundException(ErrorMessages.REPORT_NOT_FOUND.getMessage()));
 
-        // Note: You'll need to inject AdminService and get the admin entity
-        // For now, we'll just set the admin ID
-        // report.setAdmin(adminService.getAdminById(adminId));
+        Admin admin = adminRepository.findById(adminId).orElseThrow(() -> new AdminNotFoundException("Admin not fonud with ID: " + adminId));
 
+        report.setAdmin(admin);
         report.setStatus(Report.ReportStatus.UNDER_REVIEW);
         return reportRepository.save(report);
     }
