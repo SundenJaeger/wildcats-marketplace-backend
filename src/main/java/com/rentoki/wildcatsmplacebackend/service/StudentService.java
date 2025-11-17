@@ -26,11 +26,17 @@ public class StudentService {
     }
 
     public List<Student> getAllStudents() {
-        return studentRepository.findAll();
+        List<Student> students = studentRepository.findAll();
+
+        if (students.isEmpty()) {
+            throw new StudentNotFoundException(ErrorMessages.STUDENT_NOT_FOUND.getMessage());
+        }
+
+        return students;
     }
 
-    public Optional<Student> getStudentById(Integer id) {
-        return studentRepository.findById(id);
+    public Student getStudentById(Integer id) {
+        return studentRepository.findById(id).orElseThrow(() -> new StudentNotFoundException(ErrorMessages.STUDENT_NOT_FOUND.getMessage()));
     }
 
     @Transactional
@@ -133,7 +139,13 @@ public class StudentService {
     }
 
     public List<Student> getStudentsByVerificationStatus(Boolean isVerified) {
-        return studentRepository.findByIsVerified(isVerified);
+        List<Student> verifiedStudents = studentRepository.findByIsVerified(isVerified);
+
+        if (verifiedStudents.isEmpty()) {
+            throw new StudentNotFoundException(ErrorMessages.STUDENT_NOT_FOUND.getMessage());
+        }
+
+        return verifiedStudents;
     }
 
     private String extractFirstName(String fullname) {

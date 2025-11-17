@@ -65,8 +65,8 @@ public class StudentController {
     public ResponseEntity<Student> getStudentById(
             @Parameter(description = "Student ID", required = true, example = "1")
             @PathVariable Integer id) {
-        Student student = studentService.getStudentById(id)
-                .orElseThrow(() -> new RuntimeException("Student not found"));
+        Student student = studentService.getStudentById(id);
+
         return ResponseEntity.ok(student);
     }
 
@@ -98,10 +98,10 @@ public class StudentController {
                     content = @Content(
                             examples = @ExampleObject(
                                     value = """
-                            {
-                                "isVerified": true
-                            }
-                            """
+                                            {
+                                                "isVerified": true
+                                            }
+                                            """
                             )
                     )
             )
@@ -133,5 +133,6 @@ public class StudentController {
         return ResponseEntity.ok(students);
     }
 
-    public record VerificationStatusRequest(Boolean isVerified) {}
+    public record VerificationStatusRequest(Boolean isVerified) {
+    }
 }
