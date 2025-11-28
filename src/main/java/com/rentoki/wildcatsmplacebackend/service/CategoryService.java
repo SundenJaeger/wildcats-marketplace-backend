@@ -53,14 +53,23 @@ public class CategoryService {
         return categoryRepository.save(category);
     }
 
-    public Category updateCategory(Integer id, Category categoryDetails) {
+    public Category updateCategory(Integer id, CategoryRequest request) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new CategoryNotFoundException(ErrorMessages.CATEGORY_NOT_FOUND.getMessage()));
 
-        category.setCategoryName(categoryDetails.getCategoryName());
-        category.setParentCategory(categoryDetails.getParentCategory());
-        category.setDescription(categoryDetails.getDescription());
-        category.setIsActive(categoryDetails.getIsActive());
+        category.setCategoryName(request.categoryName());
+        category.setDescription(request.description());
+        category.setIsActive(request.isActive() != null ? request.isActive() : category.getIsActive());
+
+        if (request.parentCategory() != null) {
+            if (request.parentCategoryId() != null) {
+                Category parent = categoryRepository.findById(request.parentCategoryId())
+                        .orElseThrow(() -> new CategoryNotFoundException(ErrorMessages.CATEGORY_NOT_FOUND.getMessage()));
+                category.setParentCategory(parent);
+            } else {
+                category.setParentCategory(null);
+            }
+        }
 
         return categoryRepository.save(category);
     }
