@@ -43,11 +43,11 @@ public class ResourceController {
         return ResponseEntity.ok(resources);
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<List<Resource>> searchResources(@RequestParam String keyword) {
-        List<Resource> resources = resourceService.searchResources(keyword);
-        return ResponseEntity.ok(resources);
-    }
+//    @GetMapping("/search")
+//    public ResponseEntity<List<Resource>> searchResources(@RequestParam String keyword) {
+//        List<Resource> resources = resourceService.searchResources(keyword);
+//        return ResponseEntity.ok(resources);
+//    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Resource> getResourceById(@PathVariable Integer id) {
