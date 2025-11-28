@@ -73,12 +73,18 @@ public class ResourceController {
         return ResponseEntity.ok(resource);
     }
 
+    @PatchMapping("/{id}/condition")
+    public ResponseEntity<Resource> updateResourceCondition(@PathVariable Integer id, @RequestBody ConditionUpdateRequest request) {
+        Resource resource = resourceService.updateResourceCondition(id, request.condition());
+        return ResponseEntity.ok(resource);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteResource(@PathVariable Integer id) {
         resourceService.deleteResource(id);
         return ResponseEntity.noContent().build();
     }
-
-    // Request records
+    
     public record StatusUpdateRequest(Resource.ResourceStatus status) {}
+    public record ConditionUpdateRequest(Resource.ItemCondition condition) {}
 }

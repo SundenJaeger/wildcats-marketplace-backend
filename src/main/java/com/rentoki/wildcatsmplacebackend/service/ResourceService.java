@@ -92,6 +92,14 @@ public class ResourceService {
         resourceRepository.delete(resource);
     }
 
+    public Resource updateResourceCondition(Integer id, Resource.ItemCondition condition) {
+        Resource resource = resourceRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.RESOURCE_NOT_FOUND.getMessage()));
+
+        resource.setCondition(condition);
+        return resourceRepository.save(resource);
+    }
+
     public List<Resource> getResourcesByCondition(Resource.ItemCondition condition) {
         return resourceRepository.findByCondition(condition);
     }
