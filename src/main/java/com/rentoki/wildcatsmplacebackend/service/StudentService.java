@@ -26,13 +26,7 @@ public class StudentService {
     }
 
     public List<Student> getAllStudents() {
-        List<Student> students = studentRepository.findAll();
-
-        if (students.isEmpty()) {
-            throw new StudentNotFoundException(ErrorMessages.STUDENT_NOT_FOUND.getMessage());
-        }
-
-        return students;
+        return studentRepository.findAll();
     }
 
     public Student getStudentById(Integer id) {

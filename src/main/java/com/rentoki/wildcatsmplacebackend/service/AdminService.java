@@ -25,12 +25,6 @@ public class AdminService {
     }
 
     public List<Admin> getAllAdmins() {
-        List<Admin> admins = adminRepository.findAll();
-
-        if (admins.isEmpty()) {
-            throw new AdminNotFoundException(ErrorMessages.ADMIN_NOT_FOUND.getMessage());
-        }
-
         return adminRepository.findAll();
     }
 
@@ -67,9 +61,15 @@ public class AdminService {
         return adminRepository.save(admin);
     }
 
+    @Transactional
     public void deleteAdmin(Integer id) {
-        Admin admin = adminRepository.findById(id)
-                .orElseThrow(() -> new AdminNotFoundException(ErrorMessages.ADMIN_NOT_FOUND.getMessage()));
+        Admin admin = adminRepository.findById(id).orElseThrow(() -> new AdminNotFoundException(ErrorMessages.ADMIN_NOT_FOUND.getMessage()));
+        User user = admin.getUser();
+
         adminRepository.delete(admin);
+
+        if (user != null) {
+            userRepository.delete(user);
+        }
     }
 }
