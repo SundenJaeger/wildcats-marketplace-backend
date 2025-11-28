@@ -3,8 +3,10 @@ package com.rentoki.wildcatsmplacebackend.service;
 import com.rentoki.wildcatsmplacebackend.exceptions.ErrorMessages;
 import com.rentoki.wildcatsmplacebackend.exceptions.CategoryNotFoundException;
 import com.rentoki.wildcatsmplacebackend.model.Category;
+import com.rentoki.wildcatsmplacebackend.model.CategoryRequest;
 import com.rentoki.wildcatsmplacebackend.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
@@ -36,7 +38,18 @@ public class CategoryService {
                 .orElseThrow(() -> new CategoryNotFoundException(ErrorMessages.CATEGORY_NOT_FOUND.getMessage()));
     }
 
-    public Category createCategory(Category category) {
+    public Category createCategory(CategoryRequest request) {
+        Category category = new Category();
+        category.setCategoryName(request.categoryName());
+        category.setDescription(request.description());
+        category.setIsActive(request.isActive() != null ? request.isActive() : true);
+
+        if (request.parentCategoryId() != null) {
+            Category parent = categoryRepository.findById(request.parentCategoryId())
+                    .orElseThrow(() -> new CategoryNotFoundException(ErrorMessages.CATEGORY_NOT_FOUND.getMessage()));
+            category.setParentCategory(parent);
+        }
+
         return categoryRepository.save(category);
     }
 

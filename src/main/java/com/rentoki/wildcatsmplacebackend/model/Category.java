@@ -1,6 +1,8 @@
 package com.rentoki.wildcatsmplacebackend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,12 +22,12 @@ public class Category {
     @Column(name = "category_name", nullable = false)
     private String categoryName;
 
-    @JsonIgnore
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "parent_category_id")
     private Category parentCategory;
 
-    @JsonIgnore
+    @JsonManagedReference
     @OneToMany(mappedBy = "parentCategory")
     private List<Category> subcategories;
 
