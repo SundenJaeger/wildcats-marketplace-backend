@@ -1,5 +1,8 @@
 package com.rentoki.wildcatsmplacebackend.service;
 
+import com.rentoki.wildcatsmplacebackend.exceptions.ResourceAlreadyBookmarkedException;
+import com.rentoki.wildcatsmplacebackend.exceptions.ResourceNotFoundException;
+import com.rentoki.wildcatsmplacebackend.exceptions.StudentNotFoundException;
 import com.rentoki.wildcatsmplacebackend.model.BookmarkResponse;
 import com.rentoki.wildcatsmplacebackend.model.BookmarkRequest;
 import com.rentoki.wildcatsmplacebackend.model.Bookmark;
@@ -34,14 +37,14 @@ public class BookmarkService {
     public BookmarkResponse addBookmark(Integer studentId, BookmarkRequest request) {
         if (bookmarkRepository.existsByStudentStudentIdAndResourceResourceId(
                 studentId, request.getResourceId())) {
-            throw new RuntimeException("Resource already bookmarked");
+            throw new ResourceAlreadyBookmarkedException("Resource already bookmarked");
         }
 
         Student student = studentRepository.findById(studentId)
-                .orElseThrow(() -> new RuntimeException("Student not found"));
+                .orElseThrow(() -> new StudentNotFoundException("Student not found"));
 
         Resource resource = resourceRepository.findById(request.getResourceId())
-                .orElseThrow(() -> new RuntimeException("Resource not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Resource not found"));
 
         Bookmark bookmark = new Bookmark();
         bookmark.setStudent(student);

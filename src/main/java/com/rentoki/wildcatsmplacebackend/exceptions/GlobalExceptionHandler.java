@@ -58,4 +58,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleAdminNotFoundException(AdminNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(ex.getMessage()));
     }
+
+    @ExceptionHandler(ResourceAlreadyBookmarkedException.class)
+    public ResponseEntity<ErrorResponse> handleResourceAlreadyBookmarkedException(ResourceAlreadyBookmarkedException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(ex.getMessage()));
+    }
 }
