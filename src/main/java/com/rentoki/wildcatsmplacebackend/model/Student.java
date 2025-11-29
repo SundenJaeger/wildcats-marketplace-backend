@@ -34,14 +34,14 @@ public class Student {
     @Column(name = "year_level")
     private String yearLevel;
 
-    @JsonIgnore
-    @ManyToMany
-    @JoinTable(
-            name = "student_interest",
-            joinColumns = @JoinColumn(name = "student_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id")
-    )
-    private List<Category> interests;
+//    @JsonIgnore
+//    @ManyToMany
+//    @JoinTable(
+//            name = "student_interest",
+//            joinColumns = @JoinColumn(name = "student_id"),
+//            inverseJoinColumns = @JoinColumn(name = "category_id")
+//    )
+//    private List<Category> interests;
 
     @JsonIgnore
     @OneToMany(mappedBy = "student")
@@ -54,4 +54,8 @@ public class Student {
     @JsonIgnore
     @OneToMany(mappedBy = "student")
     private List<Report> reports;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "student")
+    private List<Bookmark> bookmarks;
 }

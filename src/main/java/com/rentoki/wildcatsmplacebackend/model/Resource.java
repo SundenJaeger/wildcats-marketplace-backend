@@ -1,5 +1,6 @@
 package com.rentoki.wildcatsmplacebackend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -54,6 +55,10 @@ public class Resource {
 
     @OneToMany(mappedBy = "resource")
     private List<Report> reports;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "resource")
+    private List<Bookmark> bookmarks;
 
     public enum ItemCondition {
         NEW, LIKE_NEW, GOOD, FAIR, POOR

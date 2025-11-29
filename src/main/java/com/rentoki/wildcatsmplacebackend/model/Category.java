@@ -37,9 +37,9 @@ public class Category {
     @Column(name = "is_active")
     private Boolean isActive = true;
 
-    @JsonIgnore
-    @ManyToMany(mappedBy = "interests")
-    private List<Student> interestedStudents;
+//    @JsonIgnore
+//    @ManyToMany(mappedBy = "interests")
+//    private List<Student> interestedStudents;
 
     @JsonIgnore
     @OneToMany(mappedBy = "category")
