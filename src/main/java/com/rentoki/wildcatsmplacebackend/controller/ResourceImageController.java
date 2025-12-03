@@ -1,6 +1,7 @@
 package com.rentoki.wildcatsmplacebackend.controller;
 
 import com.rentoki.wildcatsmplacebackend.model.ResourceImage;
+import com.rentoki.wildcatsmplacebackend.model.ResourceImageRequest;
 import com.rentoki.wildcatsmplacebackend.service.ResourceImageService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,14 +31,14 @@ public class ResourceImageController {
     }
 
     @PostMapping
-    public ResponseEntity<ResourceImage> createImage(@RequestBody ResourceImage image) {
-        ResourceImage createdImage = resourceImageService.createImage(image);
+    public ResponseEntity<ResourceImage> createImage(@RequestBody ResourceImageRequest request) {
+        ResourceImage createdImage = resourceImageService.createImage(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdImage);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ResourceImage> updateImage(@PathVariable Integer id, @RequestBody ResourceImage imageDetails) {
-        ResourceImage updatedImage = resourceImageService.updateImage(id, imageDetails);
+    public ResponseEntity<ResourceImage> updateImage(@PathVariable Integer id, @RequestBody ResourceImageRequest request) {
+        ResourceImage updatedImage = resourceImageService.updateImage(id, request);
         return ResponseEntity.ok(updatedImage);
     }
 
@@ -45,11 +46,5 @@ public class ResourceImageController {
     public ResponseEntity<Void> deleteImage(@PathVariable Integer id) {
         resourceImageService.deleteImage(id);
         return ResponseEntity.noContent().build();
-    }
-
-    @PatchMapping("/{id}/set-primary")
-    public ResponseEntity<ResourceImage> setAsPrimaryImage(@PathVariable Integer id) {
-        ResourceImage image = resourceImageService.setAsPrimaryImage(id);
-        return ResponseEntity.ok(image);
     }
 }

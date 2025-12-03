@@ -2,10 +2,11 @@ package com.rentoki.wildcatsmplacebackend.service;
 
 import com.rentoki.wildcatsmplacebackend.exceptions.ErrorMessages;
 import com.rentoki.wildcatsmplacebackend.exceptions.ResourceImageNotFoundException;
+import com.rentoki.wildcatsmplacebackend.model.Resource;
 import com.rentoki.wildcatsmplacebackend.model.ResourceImage;
+import com.rentoki.wildcatsmplacebackend.model.ResourceImageRequest;
 import com.rentoki.wildcatsmplacebackend.repository.ResourceImageRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -26,31 +27,33 @@ public class ResourceImageService {
                 .orElseThrow(() -> new ResourceImageNotFoundException(ErrorMessages.RESOURCE_IMAGE_NOT_FOUND.getMessage()));
     }
 
-    public ResourceImage createImage(ResourceImage image) {
+    public ResourceImage createImage(ResourceImageRequest request) {
+        ResourceImage image = new ResourceImage();
+        image.setImagePath(request.imagePath());
+        image.setDisplayOrder(request.displayOrder() != null ? request.displayOrder() : 0);
+
+        if (request.resourceId() != null) {
+            Resource resource = new Resource();
+            resource.setResourceId(request.resourceId());
+            image.setResource(resource);
+        }
+
         return resourceImageRepository.save(image);
     }
 
-    public ResourceImage updateImage(Integer id, ResourceImage imageDetails) {
+    public ResourceImage updateImage(Integer id, ResourceImageRequest request) {
         ResourceImage image = resourceImageRepository.findById(id)
                 .orElseThrow(() -> new ResourceImageNotFoundException(ErrorMessages.RESOURCE_IMAGE_NOT_FOUND.getMessage()));
 
-        image.setImagePath(imageDetails.getImagePath());
-        image.setDisplayOrder(imageDetails.getDisplayOrder());
-        image.setIsPrimary(imageDetails.getIsPrimary());
+        image.setImagePath(request.imagePath());
+        image.setDisplayOrder(request.displayOrder() != null ? request.displayOrder() : image.getDisplayOrder());
 
-        return resourceImageRepository.save(image);
-    }
+        if (request.resourceId() != null) {
+            Resource resource = new Resource();
+            resource.setResourceId(request.resourceId());
+            image.setResource(resource);
+        }
 
-    @Transactional
-    public ResourceImage setAsPrimaryImage(Integer id) {
-        ResourceImage image = resourceImageRepository.findById(id)
-                .orElseThrow(() -> new ResourceImageNotFoundException(ErrorMessages.RESOURCE_IMAGE_NOT_FOUND.getMessage()));
-
-        // Reset all primary images for this resource
-        resourceImageRepository.clearPrimaryImages(image.getResource().getResourceId());
-
-        // Set this image as primary
-        image.setIsPrimary(true);
         return resourceImageRepository.save(image);
     }
 

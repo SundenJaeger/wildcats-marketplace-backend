@@ -1,5 +1,6 @@
 package com.rentoki.wildcatsmplacebackend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,7 @@ public class ResourceImage {
     @Column(name = "image_id")
     private Integer imageId;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "resource_id", nullable = false)
     private Resource resource;
@@ -25,9 +27,6 @@ public class ResourceImage {
 
     @Column(name = "display_order")
     private Integer displayOrder = 0;
-
-    @Column(name = "is_primary")
-    private Boolean isPrimary = false;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
