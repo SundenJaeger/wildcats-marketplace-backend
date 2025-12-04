@@ -49,6 +49,10 @@ public class Student {
 
     @JsonIgnore
     @OneToMany(mappedBy = "student")
+    private List<Comment> comments;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "student")
     private List<VerificationRequest> verificationRequests;
 
     @JsonIgnore

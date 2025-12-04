@@ -60,6 +60,9 @@ public class Resource {
     @OneToMany(mappedBy = "resource")
     private List<Bookmark> bookmarks;
 
+    @OneToMany(mappedBy = "resource", cascade = CascadeType.ALL)
+    private List<Comment> comments;
+
     public enum ItemCondition {
         NEW, LIKE_NEW, GOOD, FAIR, POOR
     }
