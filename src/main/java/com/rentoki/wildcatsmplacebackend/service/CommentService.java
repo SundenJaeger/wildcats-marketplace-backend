@@ -21,6 +21,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final ResourceRepository resourceRepository;
     private final StudentRepository studentRepository;
+    private final NotificationService notificationService;
 
     @Transactional
     public CommentResponse addComment(Integer studentId, CommentRequest request) {
@@ -37,13 +38,24 @@ public class CommentService {
         comment.setTimestamp(LocalDateTime.now());
 
         // Handle reply
+        Comment parentComment = null;
         if (request.getParentCommentId() != null) {
-            Comment parentComment = commentRepository.findById(request.getParentCommentId())
+            parentComment = commentRepository.findById(request.getParentCommentId())
                     .orElseThrow(() -> new RuntimeException("Parent comment not found"));
             comment.setParentComment(parentComment);
         }
 
         Comment saved = commentRepository.save(comment);
+
+        // Create notifications after saving comment
+        if (parentComment != null) {
+            // Notify the parent comment's author about the reply
+            notificationService.createReplyNotification(student, parentComment, saved);
+        } else {
+            // Notify the product owner about the comment
+            notificationService.createCommentNotification(student, resource, saved);
+        }
+
         return convertToDTO(saved, false); // Don't load replies for a newly created comment
     }
 

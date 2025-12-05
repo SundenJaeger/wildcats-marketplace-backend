@@ -62,4 +62,12 @@ public class Student {
     @JsonIgnore
     @OneToMany(mappedBy = "student")
     private List<Bookmark> bookmarks;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "recipient")
+    private List<Notification> receivedNotifications;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "sender")
+    private List<Notification> sentNotifications;
 }
