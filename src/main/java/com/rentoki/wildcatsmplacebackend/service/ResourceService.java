@@ -8,6 +8,7 @@ import com.rentoki.wildcatsmplacebackend.model.Student;
 import com.rentoki.wildcatsmplacebackend.repository.ResourceRepository;
 import com.rentoki.wildcatsmplacebackend.repository.StudentRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -86,9 +87,17 @@ public class ResourceService {
         return resourceRepository.save(resource);
     }
 
+    @Transactional
     public void deleteResource(Integer id) {
         Resource resource = resourceRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.RESOURCE_NOT_FOUND.getMessage()));
+
+        // With cascade = CascadeType.ALL on all relationships,
+        // this will automatically delete:
+        // - All images
+        // - All reports
+        // - All bookmarks
+        // - All comments (and their notifications and replies)
         resourceRepository.delete(resource);
     }
 

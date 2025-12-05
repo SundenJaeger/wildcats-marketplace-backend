@@ -22,14 +22,14 @@ public class ReportController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Report>> getAllReports() {
-        List<Report> reports = reportService.getAllReports();
+    public ResponseEntity<List<ReportResponse>> getAllReports() {
+        List<ReportResponse> reports = reportService.getAllReportsWithDetails();
         return ResponseEntity.ok(reports);
     }
 
     @GetMapping("/status/{status}")
-    public ResponseEntity<List<Report>> getReportsByStatus(@PathVariable Report.ReportStatus status) {
-        List<Report> reports = reportService.getReportsByStatus(status);
+    public ResponseEntity<List<ReportResponse>> getReportsByStatus(@PathVariable Report.ReportStatus status) {
+        List<ReportResponse> reports = reportService.getReportsByStatusWithDetails(status);
         return ResponseEntity.ok(reports);
     }
 
@@ -46,8 +46,8 @@ public class ReportController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Report> getReportById(@PathVariable Integer id) {
-        Report report = reportService.getReportById(id);
+    public ResponseEntity<ReportResponse> getReportById(@PathVariable Integer id) {
+        ReportResponse report = reportService.getReportByIdWithDetails(id);
         return ResponseEntity.ok(report);
     }
 

@@ -25,12 +25,64 @@ public class ReportService {
         this.resourceRepository = resourceRepository;
     }
 
+    // Mapper method to convert Report entity to ReportResponse DTO
+    public ReportResponse mapToResponse(Report report) {
+        ReportResponse.StudentInfo studentInfo = null;
+        if (report.getStudent() != null && report.getStudent().getUser() != null) {
+            User user = report.getStudent().getUser();
+            studentInfo = new ReportResponse.StudentInfo(
+                    report.getStudent().getStudentId(),
+                    user.getFirstName(),
+                    user.getLastName(),
+                    user.getEmail()
+            );
+        }
+
+        ReportResponse.ResourceInfo resourceInfo = null;
+        if (report.getResource() != null) {
+            resourceInfo = new ReportResponse.ResourceInfo(
+                    report.getResource().getResourceId(),
+                    report.getResource().getTitle()
+            );
+        }
+
+        return new ReportResponse(
+                report.getReportId(),
+                report.getReason(),
+                report.getDescription(),
+                report.getStatus(),
+                report.getDateReported(),
+                report.getDateResolved(),
+                report.getStudent() != null ? report.getStudent().getStudentId() : null,
+                report.getResource() != null ? report.getResource().getResourceId() : null,
+                report.getAdmin() != null ? report.getAdmin().getAdminId() : null,
+                studentInfo,
+                resourceInfo
+        );
+    }
+
     public List<Report> getAllReports() {
         return reportRepository.findAll();
     }
 
+    // New method that returns ReportResponse with full details
+    public List<ReportResponse> getAllReportsWithDetails() {
+        return reportRepository.findAll()
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+
     public List<Report> getReportsByStatus(Report.ReportStatus status) {
         return reportRepository.findByStatus(status);
+    }
+
+    // New method that returns ReportResponse with full details
+    public List<ReportResponse> getReportsByStatusWithDetails(Report.ReportStatus status) {
+        return reportRepository.findByStatus(status)
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
     }
 
     public List<Report> getReportsByStudent(Integer studentId) {
@@ -44,6 +96,13 @@ public class ReportService {
     public Report getReportById(Integer id) {
         return reportRepository.findById(id)
                 .orElseThrow(() -> new ReportNotFoundException(ErrorMessages.REPORT_NOT_FOUND.getMessage()));
+    }
+
+    // New method that returns ReportResponse with full details
+    public ReportResponse getReportByIdWithDetails(Integer id) {
+        Report report = reportRepository.findById(id)
+                .orElseThrow(() -> new ReportNotFoundException(ErrorMessages.REPORT_NOT_FOUND.getMessage()));
+        return mapToResponse(report);
     }
 
     public ReportResponse createReport(CreateReportRequest createReportRequest) {
@@ -63,8 +122,8 @@ public class ReportService {
 
         Report savedReport = reportRepository.save(report);
 
-        return new ReportResponse(savedReport.getReportId(), savedReport.getDescription(), savedReport.getStatus(), savedReport.getDateReported(), savedReport.getDateResolved()
-        );
+        // Return the full ReportResponse with all details
+        return mapToResponse(savedReport);
     }
 
     public Report updateReportStatus(Integer id, Report.ReportStatus status) {
@@ -83,7 +142,7 @@ public class ReportService {
         Report report = reportRepository.findById(reportId)
                 .orElseThrow(() -> new ReportNotFoundException(ErrorMessages.REPORT_NOT_FOUND.getMessage()));
 
-        Admin admin = adminRepository.findById(adminId).orElseThrow(() -> new AdminNotFoundException("Admin not fonud with ID: " + adminId));
+        Admin admin = adminRepository.findById(adminId).orElseThrow(() -> new AdminNotFoundException("Admin not found with ID: " + adminId));
 
         report.setAdmin(admin);
         report.setStatus(Report.ReportStatus.UNDER_REVIEW);

@@ -50,17 +50,21 @@ public class Resource {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    @OneToMany(mappedBy = "resource", cascade = CascadeType.ALL)
+    // CASCADE ALL - will delete images when resource is deleted
+    @OneToMany(mappedBy = "resource", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ResourceImage> images;
 
-    @OneToMany(mappedBy = "resource")
+    // CASCADE ALL - will delete reports when resource is deleted
+    @OneToMany(mappedBy = "resource", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Report> reports;
 
+    // CASCADE ALL - will delete bookmarks when resource is deleted
     @JsonIgnore
-    @OneToMany(mappedBy = "resource")
+    @OneToMany(mappedBy = "resource", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Bookmark> bookmarks;
 
-    @OneToMany(mappedBy = "resource", cascade = CascadeType.ALL)
+    // CASCADE ALL - will delete comments (and their notifications) when resource is deleted
+    @OneToMany(mappedBy = "resource", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 
     public enum ItemCondition {
