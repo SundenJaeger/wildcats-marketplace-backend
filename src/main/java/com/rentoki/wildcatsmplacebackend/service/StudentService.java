@@ -7,9 +7,11 @@ import com.rentoki.wildcatsmplacebackend.exceptions.StudentNotFoundException;
 import com.rentoki.wildcatsmplacebackend.model.*;
 import com.rentoki.wildcatsmplacebackend.repository.StudentRepository;
 import com.rentoki.wildcatsmplacebackend.repository.UserRepository;
+import com.rentoki.wildcatsmplacebackend.repository.VerificationRequestRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,11 +20,18 @@ public class StudentService {
     private final StudentRepository studentRepository;
     private final UserRepository userRepository;
     private final UserService userService;
+    // 1. Added VerificationRequestRepository dependency
+    private final VerificationRequestRepository verificationRequestRepository;
 
-    public StudentService(StudentRepository studentRepository, UserRepository userRepository, UserService userService) {
+    // 2. Updated Constructor to inject the new repository
+    public StudentService(StudentRepository studentRepository,
+                          UserRepository userRepository,
+                          UserService userService,
+                          VerificationRequestRepository verificationRequestRepository) {
         this.studentRepository = studentRepository;
         this.userRepository = userRepository;
         this.userService = userService;
+        this.verificationRequestRepository = verificationRequestRepository;
     }
 
     public List<Student> getAllStudents() {
@@ -30,7 +39,8 @@ public class StudentService {
     }
 
     public Student getStudentById(Integer id) {
-        return studentRepository.findById(id).orElseThrow(() -> new StudentNotFoundException(ErrorMessages.STUDENT_NOT_FOUND.getMessage()));
+        return studentRepository.findById(id)
+                .orElseThrow(() -> new StudentNotFoundException(ErrorMessages.STUDENT_NOT_FOUND.getMessage()));
     }
 
     @Transactional
@@ -46,12 +56,22 @@ public class StudentService {
         User savedUser = userService.createUser(user);
 
         student.setUser(savedUser);
-        student.setIsVerified(false);
+        student.setIsVerified(false); // Ensure they start as unverified
         student.setEnrollmentStatus("Active");
         student.setProgram("Undecided");
         student.setYearLevel("Freshman");
 
-        return studentRepository.save(student);
+        Student savedStudent = studentRepository.save(student);
+
+        // 3. New Logic: Automatically create a Verification Request
+        VerificationRequest verificationRequest = new VerificationRequest();
+        verificationRequest.setStudent(savedStudent);
+        verificationRequest.setStatus(VerificationRequest.VerificationStatus.PENDING);
+        verificationRequest.setRequestDate(LocalDateTime.now());
+
+        verificationRequestRepository.save(verificationRequest);
+
+        return savedStudent;
     }
 
     public Student updateStudent(Integer id, Student studentDetails) {
